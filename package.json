@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "config": "npx tsc --init",
     "tsc": "npx tsc --watch",
-    "ts": "npx rimraf build && npm run tsc",
+    "ts-windows": "npx rimraf build && npm run tsc",
+    "ts": "rm -rf build && npm run tsc",
     "dev": "nodemon ./build/index.js"
   },
   "author": "agusprayudi",

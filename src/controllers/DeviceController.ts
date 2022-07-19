@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { requestHandler } from "../utils/RequestHandler";
 import { TuyaRequest } from "../utils/TuyaHelper";
 
 class DeviceController {
@@ -9,10 +10,9 @@ class DeviceController {
             console.log(data)
             const { deviceId } = req.params;
             const resp = await TuyaRequest("POST", `/devices/${deviceId}/commands`, data["commands"]);
-            return res.send(resp);
+            return res.status(200).send(requestHandler(resp, "Succeed send command to device!", 200));
         }catch(e){
-            console.log(e)
-            return res.send(e);
+            return res.status(400).send(requestHandler(e, "Failed send command to device!", 400));
         }
     }
 

@@ -22,16 +22,11 @@ const tuya = new TuyaContext({
     secretKey: process.env.TUYA_ACCESS_SECRET as string
 })
 
-export const TuyaRequest = async (method: Method, path: string, body: any) : Promise<any> => {
-        // console.log([process.env.TUYA_BASE_URL, path].join(""))
+export const TuyaRequest = async (method: Method, path: string, body: any) : Promise<TuyaResponse<any>> => {
         const resp = await tuya.request({
             method,
-            path,
+            path: process.env.TUYA_VERSION_API + path,
             body
         })
-        if(!resp.success){
-            console.log("error!")
-        }else{
-            return resp;
-        }
+        return resp;
 }
