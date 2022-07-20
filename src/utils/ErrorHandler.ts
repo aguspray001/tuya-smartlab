@@ -1,14 +1,23 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
-class ErrorHandler extends Error{
-    constructor(message: string){
+class ErrorHandler extends Error {
+    constructor(
+        message: string,
+        public code: number,
+        public status: boolean
+    ) {
         super(message)
-        this.name = "Custom Error"
+        this.name = "Error Handler Response"
     }
 }
 
-export const errorHandlerMiddleware = (err: ErrorRequestHandler, req:Request, res: Response, next: NextFunction)=>{
-    res.status(500).send(`mengalami error =>  ${err}`);
-    next()
+export const errorHandlerMiddleware = (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
+    res.json({
+        name: err.name,
+        status: err.status,
+        code: err.code,
+        message: err.message,
+        stack: err.stack
+    });
 }
 export default ErrorHandler;

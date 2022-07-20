@@ -3,6 +3,7 @@ import { requestHandler } from "../utils/RequestHandler";
 import { TuyaRequest } from "../utils/TuyaHelper";
 import { IDeviceController } from "./ControllerInterface";
 import { config as dotenv } from "dotenv";
+import ErrorHandler from "../utils/ErrorHandler";
 
 dotenv();
 
@@ -16,7 +17,7 @@ class DeviceController implements IDeviceController {
             const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceId}/commands`;
             const resp = await TuyaRequest("POST", path, data);
             if(!resp.success){
-               throw new Error(resp.msg as string);
+               throw new ErrorHandler(resp.msg as string, resp.code, false);
             }
             return res.status(200).send(requestHandler(resp, "Succeed send command to device!", 200));
         } catch (e) {
