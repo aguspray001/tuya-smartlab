@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { request } from "http";
 
 export interface IMainController{
@@ -11,6 +11,6 @@ export interface IMainController{
 }
 
 export interface IDeviceController{
-    command(req: Request, res: Response):Response | Promise<Response>;
-    showAllDevices(req: Request, res: Response):Response | Promise<Response>;
+    command(req: Request, res: Response, next: NextFunction):Response | Promise<Response> | NextFunction;
+    showAllDevices(req: Request, res: Response, next: NextFunction):Response | Promise<Response>;
 }

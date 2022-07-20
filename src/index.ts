@@ -1,4 +1,4 @@
-import express, {Application, Request, Response} from 'express';
+import express, {Application, ErrorRequestHandler, NextFunction, Request, Response} from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import compression from 'compression';
@@ -10,6 +10,7 @@ import { config as dotenv } from 'dotenv';
 import UserRoutes from './routers/UserRouter';
 import DeviceRouter from './routers/DeviceRouter';
 import AuthRoutes from './routers/AuthRoutes';
+import { CorsConfig } from './constant/CorsConfig';
 
 class App {
     public app: Application;
@@ -17,8 +18,8 @@ class App {
     constructor(){
         this.app = express();
         this.plugins();
-        this.routes();
         dotenv();
+        this.routes();
     }
 
     protected plugins():void {
@@ -27,39 +28,21 @@ class App {
         this.app.use(morgan('dev'));
         this.app.use(compression());
         this.app.use(helmet());
-        this.app.use(
-            cors({
-                origin: [
-                  'https://openapi.tuyaus.com',
-                  'http://localhost:8000',
-                ],
-                methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'], 
-                allowedHeaders: [
-                  'Origin',
-                  'X-Requested-With',
-                  'Content-Type',
-                  'Accept',
-                  'Signature-Headers',
-                  'client_id',
-                  'access_token',
-                  'sign',
-                  'sign_method',
-                  'stringToSign',
-                  't',
-                  'nonce',
-                ], 
-              })
-        )
+        this.app.use(cors(CorsConfig));
     }
 
     protected routes():void {
         this.app.route('/').get((req:Request, res: Response)=> {
             res.send('wellcome to tuya wrapper API - Smart Lab');
         })
-
+        
         this.app.use(this.apiVersioning +'/users', UserRoutes);
         this.app.use(this.apiVersioning +'/device', DeviceRouter);
         this.app.use(this.apiVersioning + '/auth', AuthRoutes)
+        // error handler
+        this.app.use((err: ErrorRequestHandler, req:Request, res: Response, next: NextFunction)=>{
+            res.status(500).send(err);
+        })
     }   
 }
 

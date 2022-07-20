@@ -1,6 +1,5 @@
 import { TuyaContext, TuyaResponse } from "@tuya/tuya-connector-nodejs";
 import { config as dotenv } from 'dotenv';
-import CustomError from "./CustomError";
 
 dotenv();
 
@@ -22,10 +21,11 @@ const tuya = new TuyaContext({
     secretKey: process.env.TUYA_ACCESS_SECRET as string
 })
 
-export const TuyaRequest = async (method: Method, path: string, body: any) : Promise<TuyaResponse<any>> => {
+export const TuyaRequest = async (method: Method, path: string, body?: any) : Promise<TuyaResponse<any>> => {
+        console.log("full url => ", process.env.TUYA_BASE_URL+path)
         const resp = await tuya.request({
             method,
-            path: process.env.TUYA_VERSION_API + path,
+            path: path,
             body
         })
         return resp;
