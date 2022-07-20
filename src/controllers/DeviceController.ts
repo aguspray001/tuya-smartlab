@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { requestHandler } from "../utils/RequestHandler";
 import { TuyaRequest } from "../utils/TuyaHelper";
+import { IDeviceController } from "./ControllerInterface";
 
-class DeviceController {
+class DeviceController implements IDeviceController {
 
     command = async (req: Request, res: Response): Promise<Response> => {
         try{
@@ -16,8 +17,8 @@ class DeviceController {
         }
     }
 
-    showAllDevices(req: Request, res: Response): Response {
-        throw new Error("Method not implemented.");
+    showAllDevices = async (req: Request, res: Response): Promise<Response> => {
+        return res.send();
     }
 
 }

@@ -9,6 +9,7 @@ import { config as dotenv } from 'dotenv';
 // routes:
 import UserRoutes from './routers/UserRouter';
 import DeviceRouter from './routers/DeviceRouter';
+import AuthRoutes from './routers/AuthRoutes';
 
 class App {
     public app: Application;
@@ -58,6 +59,7 @@ class App {
 
         this.app.use(this.apiVersioning +'/users', UserRoutes);
         this.app.use(this.apiVersioning +'/device', DeviceRouter);
+        this.app.use(this.apiVersioning + '/auth', AuthRoutes)
     }   
 }
 
