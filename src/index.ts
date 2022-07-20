@@ -11,6 +11,7 @@ import UserRoutes from './routers/UserRouter';
 import DeviceRouter from './routers/DeviceRouter';
 import AuthRoutes from './routers/AuthRoutes';
 import { CorsConfig } from './constant/CorsConfig';
+import { errorHandlerMiddleware } from './utils/ErrorHandler';
 
 class App {
     public app: Application;
@@ -37,12 +38,10 @@ class App {
         })
         
         this.app.use(this.apiVersioning +'/users', UserRoutes);
-        this.app.use(this.apiVersioning +'/device', DeviceRouter);
         this.app.use(this.apiVersioning + '/auth', AuthRoutes)
+        this.app.use(this.apiVersioning +'/device', DeviceRouter);
         // error handler
-        this.app.use((err: ErrorRequestHandler, req:Request, res: Response, next: NextFunction)=>{
-            res.status(500).send(err);
-        })
+        this.app.use(errorHandlerMiddleware)
     }   
 }
 

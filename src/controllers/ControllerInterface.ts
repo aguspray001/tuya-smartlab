@@ -11,6 +11,6 @@ export interface IMainController{
 }
 
 export interface IDeviceController{
-    command(req: Request, res: Response, next: NextFunction):Response | Promise<Response> | NextFunction;
+    command(req: Request, res: Response, next: NextFunction):Response | Promise<Response | void>;
     showAllDevices(req: Request, res: Response, next: NextFunction):Response | Promise<Response>;
 }
