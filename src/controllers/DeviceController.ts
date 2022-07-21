@@ -10,16 +10,21 @@ dotenv();
 class DeviceController implements IDeviceController {
 
     command = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        console.log(req.body)
         try {
             const data = req.body;
             const { deviceId } = req.params;
-            
+
             const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceId}/commands`;
-            const resp = await TuyaRequest("POST", path, data);
-            if(!resp.success){
-               throw new ErrorHandler(resp.msg as string, resp.code, false);
+            // send to tuya cloud API
+            const command = await TuyaRequest("POST", path, {
+                "commands": JSON.parse(data.commands)
+            });
+
+            if(!command.success){
+               throw new ErrorHandler(command.msg as string, command.code, false);
             }
-            return res.status(200).send(requestHandler(resp, "Succeed send command to device!", 200));
+            return res.status(200).send(requestHandler(command, "Succeed send command to device!", 200));
         } catch (e) {
             return next(e);
         }

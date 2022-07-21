@@ -16,17 +16,16 @@ type Method =
   | 'unlink' | 'UNLINK'
 
 const tuya = new TuyaContext({
-    baseUrl: process.env.TUYA_BASE_URL as string,
-    accessKey: process.env.TUYA_ACCESS_ID as string,
-    secretKey: process.env.TUYA_ACCESS_SECRET as string
+  baseUrl: process.env.TUYA_BASE_URL as string,
+  accessKey: process.env.TUYA_ACCESS_ID as string,
+  secretKey: process.env.TUYA_ACCESS_SECRET as string
 })
 
-export const TuyaRequest = async (method: Method, path: string, body?: any) : Promise<TuyaResponse<any>> => {
-        console.log("full url => ", process.env.TUYA_BASE_URL+path)
-        const resp = await tuya.request({
-            method,
-            path: path,
-            body
-        })
-        return resp;
+export const TuyaRequest = async (method: Method, path: string, body?: any): Promise<TuyaResponse<any>> => {
+  const resp = await tuya.request({
+    path,
+    method,
+    body
+  })
+  return resp;
 }
