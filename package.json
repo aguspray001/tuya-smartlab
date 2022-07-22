@@ -14,9 +14,11 @@
   "author": "agusprayudi",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.0.6",
     "nodemon": "^2.0.19",
@@ -26,6 +28,7 @@
   },
   "dependencies": {
     "@tuya/tuya-connector-nodejs": "^2.1.2",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
