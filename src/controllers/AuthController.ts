@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
 import ErrorHandler from "../utils/ErrorHandler";
 import { requestHandler } from "../utils/RequestHandler";
 const User = require('../models').User;
@@ -9,7 +10,7 @@ class AuthController {
         try {
             const user = await User.findOne({ where: { email } })
             if (user) {
-                throw new ErrorHandler("User is already existing", 400, false);
+                throw new ErrorHandler("User email is already existing", 400, false);
             }
             const createdUser = User.create({
                 email,
@@ -47,8 +48,6 @@ class AuthController {
             } else if (!user) {
                 throw new ErrorHandler("User not found", 404, false);
             }
-            // user.is_verified = true;
-            // await user.save();
             return res.status(200).send(requestHandler(user, "Success verify user account", 200));
         } catch (e) {
             next(e);

@@ -2,7 +2,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
 class ErrorHandler extends Error {
     constructor(
-        message: string,
+        message: string | any,
         public code: number,
         public status: boolean
     ) {
