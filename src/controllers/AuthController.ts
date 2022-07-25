@@ -4,6 +4,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import Authentication from "../utils/Authentication";
 import { requestHandler } from "../utils/RequestHandler";
 const User = require('../models').User;
+const Role = require('../models').Role;
 
 class AuthController {
     register = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
@@ -37,15 +38,22 @@ class AuthController {
 
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {email, password} = req.body;
+            const { email, password } = req.body;
             // check user by username
-            const user = await User.findOne({where: { email }});
+            const user = await User.findOne({
+                where: { email },
+                include: [{
+                    model: Role,
+                    as: 'role'
+                }]
+            });
+
             // check password
-            if(!user){
+            if (!user) {
                 throw new ErrorHandler("User not found", 404, false);
             }
             const checkedPassword = await Authentication.PasswordCompare(password, user.password);
-            if(!checkedPassword){
+            if (!checkedPassword) {
                 throw new ErrorHandler("Password is wrong", 401, false);
             }
             // generate token
@@ -68,7 +76,9 @@ class AuthController {
             } else if (!user) {
                 throw new ErrorHandler("User not found", 404, false);
             }
-            return res.status(200).send(requestHandler(user, "Success verify user account", 200));
+
+            const updateUser = await User.update({ status: true }, { where: { status: false, email } })
+            return res.status(200).send(requestHandler(updateUser, "Success verify user account", 200));
         } catch (e) {
             next(e);
         }

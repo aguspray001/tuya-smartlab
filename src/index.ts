@@ -10,6 +10,8 @@ import { config as dotenv } from 'dotenv';
 import UserRoutes from './routers/UserRouter';
 import DeviceRouter from './routers/DeviceRouter';
 import AuthRoutes from './routers/AuthRoutes';
+import RoleRoutes from './routers/RoleRoutes';
+// utilities:
 import { CorsConfig } from './constant/CorsConfig';
 import { errorHandlerMiddleware } from './utils/ErrorHandler';
 
@@ -40,6 +42,7 @@ class App {
         this.app.use(this.apiVersioning +'/users', UserRoutes);
         this.app.use(this.apiVersioning + '/auth', AuthRoutes)
         this.app.use(this.apiVersioning +'/device', DeviceRouter);
+        this.app.use(this.apiVersioning +'/role', RoleRoutes);
         // error handler
         this.app.use(errorHandlerMiddleware)
     }   
