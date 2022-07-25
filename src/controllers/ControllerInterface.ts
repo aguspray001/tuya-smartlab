@@ -12,5 +12,6 @@ export interface IMainController{
 
 export interface IDeviceController{
     command(req: Request, res: Response, next: NextFunction):Response | Promise<Response | void>;
-    showAllDevices(req: Request, res: Response, next: NextFunction):Response | Promise<Response>;
+    showAllDevices(req: Request, res: Response, next: NextFunction):Response | Promise<Response | void>;
+    add(req: Request, res: Response, next: NextFunction):Response | Promise<Response | void>;
 }

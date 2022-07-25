@@ -5,7 +5,8 @@ import BaseRoutes from "./BaseRoutes";
 class DeviceRouter extends BaseRoutes{
     routes(): void {
         this.router.post('/command/:deviceId', auth, DeviceController.command);
-        this.router.get('/:projectId', DeviceController.showAllDevices);
+        this.router.post('/add', auth, DeviceController.add);
+        this.router.get('/:projectId', auth, DeviceController.showAllDevices);
     }
     
 }
