@@ -5,6 +5,7 @@ import { IDeviceController } from "./ControllerInterface";
 import { config as dotenv } from "dotenv";
 import ErrorHandler from "../utils/ErrorHandler";
 const Device = require('../models').Device;
+const HistoryDevice = require('../models').HistoryDevice;
 
 dotenv();
 
@@ -15,6 +16,7 @@ class DeviceController implements IDeviceController {
         try {
             const data = req.body;
             const { deviceId } = req.params;
+            const { credentials } = req.app.locals;
 
             const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceId}/commands`;
             // send to tuya cloud API
@@ -23,9 +25,29 @@ class DeviceController implements IDeviceController {
             });
 
             if (!command.success) {
+
+                await HistoryDevice.create({
+                    last_date: new Date(),
+                    user_id: credentials.id,
+                    device_id: deviceId,
+                    last_status: false,
+                    message: command.msg as string
+                });
+
                 throw new ErrorHandler(command.msg as string, command.code, false);
             }
-            return res.status(200).send(requestHandler(command, "Succeed send command to device", 200));
+            
+            const historyDevice = await HistoryDevice.create({
+                last_date: new Date(),
+                user_id: credentials.id,
+                device_id: deviceId,
+                last_status: command.result,
+                message: command.msg as string
+            });
+            return res.status(200).send(requestHandler({
+                command,
+                historyDevice
+            }, "Succeed send command and record device", 200));
         } catch (e) {
             return next(e);
         }
@@ -49,13 +71,13 @@ class DeviceController implements IDeviceController {
             const { deviceId, categoryId, userId } = req.body;
             const { credentials } = req.app.locals;
 
-            const device = await Device.create({ 
-                device_id: deviceId, 
-                category_id: categoryId, 
-                user_id: credentials.id, 
-                status: false 
+            const device = await Device.create({
+                device_id: deviceId,
+                category_id: categoryId,
+                user_id: credentials.id,
+                status: false
             });
-            
+
             if (!device) {
                 throw new ErrorHandler("Error when add device", 400, false);
             }

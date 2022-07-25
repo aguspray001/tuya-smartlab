@@ -15,6 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'role_id',
         as: 'role'
       })
+
+      User.hasOne(models.HistoryDevice, {
+        foreignKey: 'user_id',
+        as: 'user'
+      })
+
+      User.hasMany(models.Device, {
+        foreignKey: 'user_id',
+        as: 'device_user'
+      })
     }
   }
   User.init({
