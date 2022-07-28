@@ -3,8 +3,10 @@ import { validationResult } from "express-validator";
 import ErrorHandler from "../utils/ErrorHandler";
 import Authentication from "../utils/Authentication";
 import { requestHandler } from "../utils/RequestHandler";
+import { Sequelize } from "../models";
 const User = require('../models').User;
 const Role = require('../models').Role;
+const Device = require('../models').Device;
 
 class AuthController {
     register = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
@@ -18,7 +20,7 @@ class AuthController {
             // hashing password
             const hashedPassword = await Authentication.Passwordhash(password);
             // create user to db
-            const createdUser = User.create({
+            const createdUser = await User.create({
                 email,
                 password: hashedPassword,
                 is_verified: false,
@@ -42,10 +44,16 @@ class AuthController {
             // check user by username
             const user = await User.findOne({
                 where: { email },
-                include: [{
-                    model: Role,
-                    as: 'role'
-                }]
+                include: [
+                    {
+                        model: Role,
+                        as: 'role'
+                    },
+                    {
+                        model: Device,
+                        as: 'device_user',
+                    }
+                ]
             });
 
             // check password

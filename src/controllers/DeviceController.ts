@@ -36,7 +36,7 @@ class DeviceController implements IDeviceController {
 
                 throw new ErrorHandler(command.msg as string, command.code, false);
             }
-            
+
             const historyDevice = await HistoryDevice.create({
                 last_date: new Date(),
                 user_id: credentials.id,
@@ -63,6 +63,24 @@ class DeviceController implements IDeviceController {
             return res.send(requestHandler(resp, "Success get device list!", 200));
         } catch (e) {
             return res.send(requestHandler(e, "Failed get device list!", 200));
+        }
+    }
+
+    getAll = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+            const { credentials } = req.app.locals;
+            const {user_id} = req.params;
+
+            const device = await Device.findAll({
+                where: { user_id }
+            })
+
+            if (!device) {
+                throw new ErrorHandler("Cannot get devices", 500, false);
+            }
+            return res.send(requestHandler(device, "Succeed get device data", 200))
+        } catch (e) {
+            next(e)
         }
     }
 

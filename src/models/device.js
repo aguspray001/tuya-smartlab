@@ -11,11 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Device.hasMany(models.HistoryDevice, {
-        foreignKey: 'device_id',
-        as: 'device'
-      })
-
       Device.belongsTo(models.User, {
         foreignKey: 'user_id',
         as: 'device_user'
@@ -25,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   Device.init({
     device_id: DataTypes.STRING,
     status: DataTypes.BOOLEAN,
-    category_id: DataTypes.STRING,
-    user_id: DataTypes.STRING
+    category_id: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Device',
