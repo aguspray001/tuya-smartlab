@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import ErrorHandler from "../utils/ErrorHandler";
 import { requestHandler } from "../utils/RequestHandler";
 const Role = require('../models').Role;
+const User = require('../models').User;
+
 
 class RoleController {
     create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
@@ -19,7 +21,12 @@ class RoleController {
 
     getAll = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
-            const role = await Role.findAll();
+            const role = await Role.findAll({
+                // include: [{
+                //     model: User,
+                //     as: 'role'
+                // }]
+            });
             if (!role) {
                 throw new ErrorHandler("There is no rules in database", 400, false);
             }

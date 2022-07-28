@@ -40,6 +40,7 @@
     "helmet": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^10.0.0",
+    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
