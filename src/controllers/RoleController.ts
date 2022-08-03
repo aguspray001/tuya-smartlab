@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { INTERNAL_SERVER_ERROR } from "../constant/ErrorType";
 import ErrorHandler from "../utils/ErrorHandler";
 import { requestHandler } from "../utils/RequestHandler";
 const Role = require('../models').Role;
@@ -8,10 +9,10 @@ const User = require('../models').User;
 class RoleController {
     create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
-            const { name, id } = req.body;
-            const role = await Role.create({ name, id });
+            const { name } = req.body;
+            const role = await Role.create({ name });
             if (!role) {
-                throw new ErrorHandler("Cannot create role", 400, false);
+                throw new ErrorHandler("Cannot create role", INTERNAL_SERVER_ERROR, false);
             }
             return res.send(requestHandler(role, "Success creating a role", 200));
         } catch (e) {
@@ -28,7 +29,7 @@ class RoleController {
                 // }]
             });
             if (!role) {
-                throw new ErrorHandler("There is no rules in database", 400, false);
+                throw new ErrorHandler("There is no rules in database", INTERNAL_SERVER_ERROR, false);
             }
             return res.send(requestHandler(role, "Success get a role", 200));
         } catch (e) {
@@ -41,7 +42,7 @@ class RoleController {
             const { name, changedName } = req.body;
             const role = await Role.findOne({ name });
             if (!role) {
-                throw new ErrorHandler("Cannot create role", 400, false);
+                throw new ErrorHandler("Cannot create role", INTERNAL_SERVER_ERROR, false);
             }
             role.name = changedName;
             return res.send(requestHandler(role, "Success creating a role", 200));
