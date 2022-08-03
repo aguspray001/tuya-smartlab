@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'test/**/*.ts' --watch --watch-files test",
+    "dev-test": "mocha -r ts-node/register 'test/**/*.ts' --watch --watch-files test",
+    "test": "mocha -r ts-node/register 'test/**/*.ts'",
     "config": "npx tsc --init",
     "tsc": "npx tsc --watch",
     "ts-windows": "npx rimraf build && npm run tsc",
