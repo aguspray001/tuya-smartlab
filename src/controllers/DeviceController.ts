@@ -4,6 +4,7 @@ import { TuyaRequest } from "../utils/TuyaHelper";
 import { IDeviceController } from "./ControllerInterface";
 import { config as dotenv } from "dotenv";
 import ErrorHandler from "../utils/ErrorHandler";
+import { INTERNAL_SERVER_ERROR } from "../constant/ErrorType";
 const Device = require('../models').Device;
 const HistoryDevice = require('../models').HistoryDevice;
 
@@ -76,7 +77,7 @@ class DeviceController implements IDeviceController {
             })
 
             if (!device) {
-                throw new ErrorHandler("Cannot get devices", 500, false);
+                throw new ErrorHandler("Cannot get devices", INTERNAL_SERVER_ERROR, false);
             }
             return res.send(requestHandler(device, "Succeed get device data", 200))
         } catch (e) {
@@ -97,7 +98,7 @@ class DeviceController implements IDeviceController {
             });
 
             if (!device) {
-                throw new ErrorHandler("Error when add device", 400, false);
+                throw new ErrorHandler("Error when add device", INTERNAL_SERVER_ERROR, false);
             }
             return res.status(200).send(requestHandler(device, "Succeed add device", 200));
         } catch (e) {

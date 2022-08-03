@@ -11,16 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Device.belongsTo(models.User, {
-        foreignKey: 'user_id',
-        as: 'device_user'
-      })
     }
   }
   Device.init({
-    device_id: DataTypes.STRING,
+    device_code: DataTypes.STRING,
     status: DataTypes.BOOLEAN,
-    category_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
   }, {
     sequelize,

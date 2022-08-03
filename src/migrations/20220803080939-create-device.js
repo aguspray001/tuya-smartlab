@@ -1,24 +1,21 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('HistoryDevices', {
+    await queryInterface.createTable('Devices', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      last_date: {
-        type: Sequelize.DATE
+      device_code: {
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.BOOLEAN
       },
       user_id: {
         type: Sequelize.INTEGER
-      },
-      device_id: {
-        type: Sequelize.STRING
-      },
-      last_status: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('HistoryDevices');
+    await queryInterface.dropTable('Devices');
   }
 };

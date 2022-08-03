@@ -8,13 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      name: {
         type: Sequelize.STRING
       },
       password: {
         type: Sequelize.STRING
       },
-      role_id: {
+      email: {
         type: Sequelize.STRING
       },
       createdAt: {
