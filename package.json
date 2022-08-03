@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:watch": "ts-mocha test/**/*.ts -w --watch-files '**/*.ts",
-    "test": "ts-mocha -p ./tsconfig.json test/**/*.ts --exit",
+    "test:watch": "ts-mocha src/test/**/*.ts -w --watch-files '**/*.ts",
+    "test": "ts-mocha -p ./tsconfig.json src/test/**/*.ts --exit",
     "config": "npx tsc --init",
     "tsc": "npx tsc --watch",
     "ts-windows": "npx rimraf build && npm run tsc",
