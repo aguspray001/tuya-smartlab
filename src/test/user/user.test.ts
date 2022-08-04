@@ -10,41 +10,41 @@ const userRegisterURL = "/api/v1/auth/register"
 
 describe("AUTHENTICATION API TESTING", () => {
 
-  it("LOGIN USER", () => {
-    chai
-      .request(app)
-      .post(userLoginURL)
-      .type('form')
-      .send({
-        'email': 'aguspray00123@gmail.comidd',
-        'password': '123456d'
-      })
-      .end((err, res) => {
-        expect(err).to.be.null
-        expect(res.body).to.be.an('object')
-        expect(res.body.data).to.be.a('string')
-        expect(res.body).to.have.property('data')
-        expect(res.body).to.have.property('message')
-        expect(res.body).to.have.property('status')
-      });
-  });
+  // it("LOGIN USER", () => {
+  //   chai
+  //     .request(app)
+  //     .post(userLoginURL)
+  //     .type('form')
+  //     .send({
+  //       'email': 'aguspray00123@gmail.comidd',
+  //       'password': '123456d'
+  //     })
+  //     .end((err, res) => {
+  //       expect(err).to.be.null
+  //       expect(res.body).to.be.an('object')
+  //       expect(res.body.data).to.be.a('string')
+  //       expect(res.body).to.have.property('data')
+  //       expect(res.body).to.have.property('message')
+  //       expect(res.body).to.have.property('status')
+  //     });
+  // });
 
-  it("ALREADY REGISTERED USER", () => {
-    chai
-      .request(app)
-      .post(userRegisterURL)
-      .type('form')
-      .send({
-        'email': 'aguspray00123@gmail.comidd',
-        'password': '123456d'
-      })
-      .end((err, res) => {
-        expect(res.body.code).to.be.equal(500)
-        expect(res.body).to.be.an('object')
-        expect(res.body.message).to.be.a('string')
-        expect(res.body.message).to.be.equal('User email is already existing')
-      });
-  });
+  // it("ALREADY REGISTERED USER", () => {
+  //   chai
+  //     .request(app)
+  //     .post(userRegisterURL)
+  //     .type('form')
+  //     .send({
+  //       'email': 'aguspray00123@gmail.comidd',
+  //       'password': '123456d'
+  //     })
+  //     .end((err, res) => {
+  //       expect(res.body.code).to.be.equal(500)
+  //       expect(res.body).to.be.an('object')
+  //       expect(res.body.message).to.be.a('string')
+  //       expect(res.body.message).to.be.equal('User email is already existing')
+  //     });
+  // });
 
   // it("ALREADY NEW USER", () => {
   //   chai
