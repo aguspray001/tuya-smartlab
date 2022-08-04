@@ -11,6 +11,9 @@ export interface IMainController {
 
 export interface IDeviceController {
     command(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
-    showAllDevices(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
-    add(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
+    getRegisteredDeivceOnTuya(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
+    create(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
+    read(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
+    update(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
+    delete(req: Request, res: Response, next: NextFunction): Response | Promise<Response | void>;
 }

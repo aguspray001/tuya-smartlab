@@ -17,6 +17,7 @@ import HistoryDeviceRoutes from './routers/HistoryDevice';
 import { CorsConfig } from './constant/CorsConfig';
 import { errorHandlerMiddleware } from './utils/ErrorHandler';
 import UserRoleRoutes from './routers/UserRoleRoutes';
+import UserDeviceRoutes from './routers/UserDeviceRoutes';
 
 class App {
     public app: Application;
@@ -48,6 +49,7 @@ class App {
         this.app.use(this.apiVersioning +'/role', RoleRoutes);
         this.app.use(this.apiVersioning +'/history', HistoryDeviceRoutes);
         this.app.use(this.apiVersioning +'/user-role', UserRoleRoutes);
+        this.app.use(this.apiVersioning +'/user-device', UserDeviceRoutes);
         // error handler
         this.app.use(errorHandlerMiddleware)
     }   

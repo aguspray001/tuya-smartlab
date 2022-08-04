@@ -2,14 +2,20 @@ import DeviceController from "../controllers/DeviceController";
 import { auth } from "../middlewares/AuthMiddleware";
 import BaseRoutes from "./BaseRoutes";
 
-class DeviceRouter extends BaseRoutes{
+class DeviceRouter extends BaseRoutes {
     routes(): void {
-        this.router.post('/command/:deviceId', auth, DeviceController.command);
-        this.router.post('/add', auth, DeviceController.add);
-        this.router.get('get-tuya/:projectId', auth, DeviceController.showAllDevices);
-        this.router.get('/get-all/:user_id', auth, DeviceController.getAll);
+        // internal API extended with TUYA API
+        this.router.post('/command/:deviceCode', auth, DeviceController.command);
+        this.router.get('/status/:deviceCode', auth, DeviceController.status);
+        this.router.get('get-all-device-tuya/:projectId', auth, DeviceController.getRegisteredDeivceOnTuya);
+        // internal API
+        this.router.post('/create', auth, DeviceController.create);
+        this.router.get('/', auth, DeviceController.read);
+        this.router.get('/:deviceCode', auth, DeviceController.readById);
+        this.router.put('/:deviceCode', auth, DeviceController.update);
+        this.router.delete('/:deviceCode', auth, DeviceController.delete);
     }
-    
+
 }
 
 export default new DeviceRouter().router;
