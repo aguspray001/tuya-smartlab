@@ -5,20 +5,34 @@ name: Node.js CI
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 12
-      uses: actions/setup-node@v3
-      with:
-        node-version: 12.x
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build --if-present
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js 12
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12.x
+          cache: "npm"
+      - run: npm i
+      - run: npm run build --if-present
+      - run: npm test
+
+      - name: create env file
+      - run: |
+          touch .env
+          echo PORT=${{ secrets.NODE_PORT }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+          echo JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo TUYA_ACCESS_ID=${{ secrets.TUYA_ACCESS_ID }} >> .env
+          echo TUYA_ACCESS_SECRET=${{ secrets.TUYA_ACCESS_SECRET }} >> .env
+          echo TUYA_BASE_URL=${{ secrets.TUYA_BASE_URL }} >> .env
+          echo TUYA_PROJECT_ID=${{ secrets.TUYA_PROJECT_ID }} >> .env
+          echo TUYA_VERSION_API=${{ secrets.TUYA_VERSION_API }} >> .env
