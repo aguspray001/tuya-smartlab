@@ -45,12 +45,8 @@ class AuthController {
                 include: [
                     {
                         model: Role,
-                        as: 'role'
+                        as: 'roles'
                     },
-                    {
-                        model: Device,
-                        as: 'device_user',
-                    }
                 ]
             });
 
