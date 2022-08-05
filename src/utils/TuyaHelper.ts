@@ -1,5 +1,6 @@
 import { TuyaContext, TuyaResponse } from "@tuya/tuya-connector-nodejs";
 import { config as dotenv } from 'dotenv';
+import ErrorHandler from "./ErrorHandler";
 
 dotenv();
 

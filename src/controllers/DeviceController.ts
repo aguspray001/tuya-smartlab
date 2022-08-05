@@ -7,7 +7,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from "../constant/ErrorType";
 import { Op } from "sequelize";
 const Device = require('../models').Device;
-const HistoryDevice = require('../models').HistoryDevice;
+const History = require('../models').History;
 const User = require('../models').User;
 const UserDevice = require('../models').UserDevice;
 
@@ -22,36 +22,41 @@ class DeviceController implements IDeviceController {
             const { deviceCode } = req.params;
             const { credentials } = req.app.locals;
 
-            const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceCode}/commands`;
-            // send to tuya cloud API
-            const command = await TuyaRequest("POST", path, {
-                "commands": JSON.parse(data.commands)
-            });
+            const findDeviceById = await Device.findOne({ where: { device_code: deviceCode, user_id: credentials.id } });
 
-            if (!command.success) {
-
-                await HistoryDevice.create({
-                    last_date: new Date(),
-                    user_id: credentials.id,
-                    device_id: deviceCode,
-                    last_status: false,
-                    message: command.msg as string
+            if (findDeviceById) {
+                const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceCode}/commands`;
+                // send to tuya cloud API
+                const command = await TuyaRequest("POST", path, {
+                    commands: JSON.parse(data.commands)
                 });
 
-                throw new ErrorHandler(command.msg as string, command.code, false);
-            }
+                if (!command.success) {
+                    await History.create({
+                        last_date: new Date(),
+                        user_id: credentials.id,
+                        device_id: findDeviceById.dataValues.id,
+                        status: false,
+                        message: command.msg as string
+                    });
 
-            const historyDevice = await HistoryDevice.create({
-                last_date: new Date(),
-                user_id: credentials.id,
-                device_id: deviceCode,
-                last_status: command.result,
-                message: command.msg as string
-            });
-            return res.status(200).send(requestHandler({
-                command,
-                historyDevice
-            }, "Succeed send command and record device", 200));
+                    throw new ErrorHandler(command.msg as string, command.code, false);
+                }
+
+                const historyDevice = await History.create({
+                    last_date: new Date(),
+                    user_id: credentials.id,
+                    device_id: findDeviceById.dataValues.id,
+                    status: command.result,
+                    message: command.msg as string
+                });
+                return res.status(200).send(requestHandler({
+                    command,
+                    historyDevice
+                }, "Succeed send command and record device", 200));
+            }else{
+                throw new ErrorHandler(`Device with this code (${deviceCode}) is not found`, NOT_FOUND, false);
+            }
         } catch (e) {
             return next(e);
         }
@@ -76,9 +81,7 @@ class DeviceController implements IDeviceController {
             const { device_code } = req.body;
             const { credentials } = req.app.locals;
 
-            const findDevice = await Device.findOne({where: {
-                [Op.and]: [{device_code}, {user_id: credentials.id}]
-            }});
+            const findDevice = await Device.findOne({ where: { device_code , user_id: credentials.id } });
 
             if (!findDevice) {
                 const device = await Device.create({
@@ -130,7 +133,7 @@ class DeviceController implements IDeviceController {
             const { deviceCode } = req.params;
 
             const device = await Device.findOne({
-                where: { user_id: credentials.id, device_code: deviceCode},
+                where: { user_id: credentials.id, device_code: deviceCode },
                 include: [
                     {
                         model: User,
@@ -157,7 +160,6 @@ class DeviceController implements IDeviceController {
                     user_id: credentials.id,
                 }
             })
-            console.log("checkkk =>>> ", findDevice.dataValues)
 
             if (findDevice) {
                 const device = await Device.destroy({
