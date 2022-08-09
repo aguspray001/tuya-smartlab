@@ -7,10 +7,12 @@
     "test:watch": "ts-mocha src/test/**/*.ts -w --watch-files '**/*.ts'",
     "test": "ts-mocha -p ./tsconfig.json src/test/**/*.ts --exit",
     "config": "npx tsc --init",
-    "tsc": "npx tsc --watch",
-    "ts-windows": "npx rimraf build && npm run tsc",
-    "ts": "rm -rf build && npm run tsc",
-    "dev": "nodemon ./build/index.js"
+    "build": "npx tsc",
+    "build:watch": "npx tsc --watch",
+    "ts-windows": "npx rimraf build && npm run build",
+    "ts": "rm -rf build && npm run build",
+    "dev": "nodemon ./build/index.js",
+    "start": "node ./build/index.js"
   },
   "author": "agusprayudi",
   "license": "ISC",
