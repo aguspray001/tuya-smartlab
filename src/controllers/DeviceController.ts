@@ -22,41 +22,35 @@ class DeviceController implements IDeviceController {
             const { deviceCode } = req.params;
             const { credentials } = req.app.locals;
 
-            const findDeviceById = await Device.findOne({ where: { device_code: deviceCode, user_id: credentials.id } });
+            console.log(data)
 
-            if (findDeviceById) {
+            // const findDeviceById = await Device.findOne({ where: { user_id: credentials.id } });
+            // console.log(findDeviceById)
+
+            // if (findDeviceById) {
                 const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceCode}/commands`;
-                // send to tuya cloud API
-                const command = await TuyaRequest("POST", path, {
-                    commands: JSON.parse(data.commands)
-                });
+        //         // send to tuya cloud API
+                const command = await TuyaRequest("POST", path, data);
+                console.log(command)
 
-                if (!command.success) {
-                    await History.create({
-                        last_date: new Date(),
-                        user_id: credentials.id,
-                        device_id: findDeviceById.dataValues.id,
-                        status: false,
-                        message: command.msg as string
-                    });
-
-                    throw new ErrorHandler(command.msg as string, command.code, false);
-                }
-
-                const historyDevice = await History.create({
-                    last_date: new Date(),
-                    user_id: credentials.id,
-                    device_id: findDeviceById.dataValues.id,
-                    status: command.result,
-                    message: command.msg as string
-                });
-                return res.status(200).send(requestHandler({
+                // const historyDevice = await History.create({
+                //     last_date: new Date(),
+                //     user_id: credentials.id,
+                //     device_id: deviceCode,
+                //     status: command.result,
+                //     message: command.msg as string
+                // })
+                res.status(200).send(requestHandler({
                     command,
-                    historyDevice
+                    ms: new Date().getMilliseconds,
+                    minute: new Date().getMinutes,
+                    hours: new Date().getHours,
+                    date: new Date()
+                    // historyDevice
                 }, "Succeed send command and record device", 200));
-            }else{
-                throw new ErrorHandler(`Device with this code (${deviceCode}) is not found`, NOT_FOUND, false);
-            }
+            // }else{
+            //     throw new ErrorHandler(`Device with this code (${deviceCode}) is not found`, NOT_FOUND, false);
+            // }
         } catch (e) {
             return next(e);
         }
