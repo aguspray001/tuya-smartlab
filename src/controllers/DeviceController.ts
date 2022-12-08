@@ -6,6 +6,7 @@ import { config as dotenv } from "dotenv";
 import ErrorHandler from "../utils/ErrorHandler";
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from "../constant/ErrorType";
 import { Op } from "sequelize";
+import axios from "axios";
 const Device = require('../models').Device;
 const History = require('../models').History;
 const User = require('../models').User;
@@ -23,15 +24,42 @@ class DeviceController implements IDeviceController {
             const { credentials } = req.app.locals;
 
             console.log(data)
-
-            // const findDeviceById = await Device.findOne({ where: { user_id: credentials.id } });
+            const findDeviceById = await Device.findOne({ where: { user_id: credentials.id } });
             // console.log(findDeviceById)
 
             // if (findDeviceById) {
                 const path = process.env.TUYA_VERSION_API + `/iot-03/devices/${deviceCode}/commands`;
         //         // send to tuya cloud API
-                const command = await TuyaRequest("POST", path, data);
-                console.log(command)
+                const commands = await TuyaRequest("POST", path, data);
+                console.log("com: ",commands)
+
+                const payload = {
+                    date: new Date().getTime(),
+                    user_id: credentials.id,
+                    // device_id: deviceCode,
+                    device_id: findDeviceById.dataValues.id,
+                    status: 1,
+                    message: data
+                }
+
+                console.log(payload)
+                
+                axios.post('http://10.0.2.7:8080/device', payload)
+                  .then(function (response) {
+                    console.log(response.data);
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+
+                res.status(200).send(requestHandler({
+                    commands,
+                    ms: new Date().getMilliseconds,
+                    minute: new Date().getMinutes,
+                    hours: new Date().getHours,
+                    date: new Date()
+                    // historyDevice
+                }, "Succeed send command and record device", 200));
 
                 // const historyDevice = await History.create({
                 //     last_date: new Date(),
@@ -40,14 +68,8 @@ class DeviceController implements IDeviceController {
                 //     status: command.result,
                 //     message: command.msg as string
                 // })
-                res.status(200).send(requestHandler({
-                    command,
-                    ms: new Date().getMilliseconds,
-                    minute: new Date().getMinutes,
-                    hours: new Date().getHours,
-                    date: new Date()
-                    // historyDevice
-                }, "Succeed send command and record device", 200));
+
+                
             // }else{
             //     throw new ErrorHandler(`Device with this code (${deviceCode}) is not found`, NOT_FOUND, false);
             // }
